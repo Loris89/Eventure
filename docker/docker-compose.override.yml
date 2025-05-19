@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  ordering-db:
+    container_name: ordering-db
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: eventure
+      POSTGRES_PASSWORD: eventure_pass
+      POSTGRES_DB: ordering
+    volumes:
+      - ordering-db-data:/var/lib/postgresql/data

@@ -1,0 +1,6 @@
+@Eventure.Order.API_HostAddress = http://localhost:5285
+
+GET {{Eventure.Order.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
