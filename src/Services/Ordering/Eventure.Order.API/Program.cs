@@ -1,5 +1,6 @@
 using Carter;
 using Eventure.Order.API.Extensions;
+using Eventure.Order.API.Handlers;
 using Scalar.AspNetCore;
 using Wolverine;
 
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails();
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Host.UseWolverine();
 
@@ -31,6 +34,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapCarter();
+app.UseExceptionHandler(_ => { });
 
 app.UseHttpsRedirection();
 
