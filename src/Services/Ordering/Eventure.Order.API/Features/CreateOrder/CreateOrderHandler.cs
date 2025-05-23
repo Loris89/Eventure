@@ -21,7 +21,7 @@ public class CreateOrderHandler
         session.Store(order);
         await session.SaveChangesAsync(ct);
 
-        logger.LogInformation("Ordine {OrderId} creato per utente {UserId}", order.Id, order.UserId);
+        logger.LogInformation("Order {OrderId} created for user {UserId}", order.Id, order.UserId);
 
         return order.Id;
     }

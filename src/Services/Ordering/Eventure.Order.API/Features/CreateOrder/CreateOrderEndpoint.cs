@@ -22,7 +22,7 @@ public class CreateOrderEndpoint : CarterModule
             return Results.Created($"/orders/{orderId}", new CreateOrderResponse(orderId));
         })
         .WithName("CreateOrder")
-        .WithDescription("Crea un nuovo ordine con uno o più biglietti per eventi.")
+        .WithDescription("Creates a new order with one or more event tickets.")
         .Produces<CreateOrderResponse>(StatusCodes.Status201Created)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
