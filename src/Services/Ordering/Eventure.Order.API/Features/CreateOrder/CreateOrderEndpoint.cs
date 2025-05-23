@@ -1,6 +1,5 @@
 ﻿using Carter;
 using Eventure.Order.API.Features.CreateOrder.Models;
-using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
@@ -19,10 +18,8 @@ public class CreateOrderEndpoint : CarterModule
     {
         app.MapPost("/orders", async (CreateOrderCommand command, IMessageBus bus, CancellationToken ct) =>
         {
-            var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
-            return result.IsSuccess
-                ? Results.Created($"/orders/{result.Value}", new CreateOrderResponse(result.Value))
-                : Results.Problem(result.Errors.First().Message);
+            var orderId = await bus.InvokeAsync<Guid>(command, ct);
+            return Results.Created($"/orders/{orderId}", new CreateOrderResponse(orderId));
         })
         .WithName("CreateOrder")
         .WithDescription("Crea un nuovo ordine con uno o più biglietti per eventi.")
