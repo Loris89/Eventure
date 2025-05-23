@@ -1,6 +1,8 @@
 using Carter;
 using Eventure.Order.API.Extensions;
+using Eventure.Order.API.Features.CreateOrder;
 using Eventure.Order.API.Handlers;
+using FluentValidation;
 using Scalar.AspNetCore;
 using Wolverine;
 
@@ -22,6 +24,8 @@ builder.Services.AddMartenConfiguration(
     builder.Configuration,
     builder.Environment
 );
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderCommandValidator>();
 
 var app = builder.Build();
 

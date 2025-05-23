@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Eventure.Order.API.Features.CreateOrder;
 
-public class CreateOrderRequestValidator : AbstractValidator<CreateOrderCommand>
+public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {
-    public CreateOrderRequestValidator()
+    public CreateOrderCommandValidator()
     {
         RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.Items).NotEmpty();
