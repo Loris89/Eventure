@@ -1,4 +1,9 @@
-﻿using Marten;
+﻿using Eventure.Order.API.Domain.Orders;
+using Eventure.Order.API.Infrastructure;
+using Marten;
+using Marten.Services;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Weasel.Core;
 using OrderAggregate = Eventure.Order.API.Domain.Orders.Order;
 
@@ -12,6 +17,7 @@ public static class ServiceCollectionExtensions
         {
             options.Connection(configuration.GetConnectionString("OrderingDb")!);
             options.DatabaseSchemaName = "ordering";
+            options.Serializer(ConfigureJsonSerializer());
             options.Schema.For<OrderAggregate>().Identity(x => x.Id);
         });
 
@@ -24,5 +30,26 @@ public static class ServiceCollectionExtensions
         }
 
         return services;
+    }
+
+    private static SystemTextJsonSerializer ConfigureJsonSerializer()
+    {
+        var options = ConfigureJsonOptions();
+        return new SystemTextJsonSerializer(options);
+    }
+
+    private static JsonSerializerOptions ConfigureJsonOptions()
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNameCaseInsensitive = true
+        };
+
+        options.Converters.Add(new SmartEnumJsonConverter<OrderStatus>());
+
+        return options;
     }
 }

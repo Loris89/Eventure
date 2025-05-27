@@ -1,9 +1,12 @@
-﻿namespace Eventure.Order.API.Domain.Common;
+﻿using System.Text.Json.Serialization;
+
+namespace Eventure.Order.API.Domain.Common;
 
 public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
 {
     private readonly List<IDomainEvent> _domainEvents = [];
 
+    [JsonIgnore]
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     public void AddDomainEvent(IDomainEvent domainEvent)

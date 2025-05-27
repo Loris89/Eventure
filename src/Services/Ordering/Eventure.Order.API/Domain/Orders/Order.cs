@@ -1,17 +1,28 @@
 ﻿using Eventure.Order.API.Domain.Common;
+using Eventure.Order.API.Infrastructure;
+using System.Text.Json.Serialization;
 
 namespace Eventure.Order.API.Domain.Orders;
 
 public sealed class Order : Aggregate<Guid>
 {
+    [JsonInclude]
     public Guid UserId { get; private set; }
 
+    [JsonInclude]
+    [JsonPropertyName("items")]
     private readonly List<OrderItem> _items = [];
 
+    [JsonIgnore]
     public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
 
+    [JsonInclude]
+    [JsonConverter(typeof(SmartEnumJsonConverter<OrderStatus>))]
     public OrderStatus Status { get; private set; }
 
+    public decimal TotalAmount => _items.Sum(i => i.TotalPrice);
+
+    [JsonConstructor]
     private Order() { }
 
     private Order(Guid id, Guid userId, IEnumerable<OrderItem> items)
@@ -24,8 +35,6 @@ public sealed class Order : Aggregate<Guid>
         _items.AddRange(items);
         Status = OrderStatus.Created;
         CreatedAt = DateTime.UtcNow;
-
-        // AddDomainEvent(new OrderCreatedDomainEvent(Id)); // in futuro
     }
 
     public static Order Create(Guid userId, IEnumerable<OrderItem> items)
@@ -34,16 +43,12 @@ public sealed class Order : Aggregate<Guid>
         return new Order(id, userId, items);
     }
 
-    public decimal TotalAmount => _items.Sum(i => i.TotalPrice);
-
     public void MarkAsPaid()
     {
         if (Status != OrderStatus.Created)
             throw new InvalidOperationException("Only orders in 'Created' state can be paid.");
 
         Status = OrderStatus.Paid;
-
-        // AddDomainEvent(new OrderPaidDomainEvent(Id)); // in futuro
     }
 
     public void Cancel()
@@ -52,7 +57,6 @@ public sealed class Order : Aggregate<Guid>
             throw new InvalidOperationException("Only orders that are not paid or already cancelled can be cancelled.");
 
         Status = OrderStatus.Cancelled;
-
-        // AddDomainEvent(new OrderCancelledDomainEvent(Id)); // in futuro
     }
 }
+
