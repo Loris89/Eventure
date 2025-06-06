@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
         {
             options.Connection(configuration.GetConnectionString("OrderingDb")!);
             options.DatabaseSchemaName = "ordering";
-            options.Serializer(ConfigureJsonSerializer());
+            options.Serializer(ConfigureJsonSerializer(env));
             options.Schema.For<OrderAggregate>().Identity(x => x.Id);
         });
 
@@ -32,20 +32,21 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    private static SystemTextJsonSerializer ConfigureJsonSerializer()
+    private static SystemTextJsonSerializer ConfigureJsonSerializer(IHostEnvironment env)
     {
-        var options = ConfigureJsonOptions();
+        var options = ConfigureJsonOptions(env);
         return new SystemTextJsonSerializer(options);
     }
 
-    private static JsonSerializerOptions ConfigureJsonOptions()
+    private static JsonSerializerOptions ConfigureJsonOptions(IHostEnvironment env)
     {
         var options = new JsonSerializerOptions
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+            //PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            //DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = env.IsDevelopment()
         };
 
         options.Converters.Add(new SmartEnumJsonConverter<OrderStatus>());

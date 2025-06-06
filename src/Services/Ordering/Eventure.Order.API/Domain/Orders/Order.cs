@@ -10,17 +10,14 @@ public sealed class Order : Aggregate<Guid>
     public Guid UserId { get; private set; }
 
     [JsonInclude]
-    [JsonPropertyName("items")]
-    private readonly List<OrderItem> _items = [];
-
-    [JsonIgnore]
-    public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
+    public List<OrderItem> Items { get; private set; } = [];
 
     [JsonInclude]
     [JsonConverter(typeof(SmartEnumJsonConverter<OrderStatus>))]
     public OrderStatus Status { get; private set; }
 
-    public decimal TotalAmount => _items.Sum(i => i.TotalPrice);
+    [JsonInclude]
+    public decimal TotalAmount => Items.Sum(i => i.TotalPrice);
 
     [JsonConstructor]
     private Order() { }
@@ -32,7 +29,7 @@ public sealed class Order : Aggregate<Guid>
 
         Id = id;
         UserId = userId;
-        _items.AddRange(items);
+        Items.AddRange(items);
         Status = OrderStatus.Created;
         CreatedAt = DateTime.UtcNow;
     }
