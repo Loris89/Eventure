@@ -17,7 +17,7 @@ public class GetOrderByIdHandler
         if (order is null)
         {
             logger.LogWarning("Order with ID {OrderId} not found", query.Id);
-            return Result.Fail<GetOrderByIdResponse>($"L'ordine {query.Id} non è stato trovato.");
+            return Result.Fail<GetOrderByIdResponse>($"Order {query.Id} not found.");
         }
 
         return new GetOrderByIdResponse(

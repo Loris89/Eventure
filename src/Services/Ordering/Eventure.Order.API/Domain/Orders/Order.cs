@@ -50,8 +50,11 @@ public sealed class Order : Aggregate<Guid>
 
     public void Cancel()
     {
-        if (Status == OrderStatus.Paid || Status == OrderStatus.Cancelled)
-            throw new InvalidOperationException("Only orders that are not paid or already cancelled can be cancelled.");
+        if (Status == OrderStatus.Paid)
+            throw new InvalidOperationException("Cannot cancel an order that has already been paid.");
+
+        if (Status == OrderStatus.Cancelled)
+            throw new InvalidOperationException("The order is already cancelled.");
 
         Status = OrderStatus.Cancelled;
     }
