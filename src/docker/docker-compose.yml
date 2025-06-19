@@ -4,5 +4,8 @@ services:
   ordering-db:
     image: postgres:15
 
+  rabbitmq:
+    image: rabbitmq:3-management
+
 volumes:
   ordering-db-data:
