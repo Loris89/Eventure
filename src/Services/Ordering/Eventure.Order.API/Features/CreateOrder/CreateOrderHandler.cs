@@ -18,7 +18,10 @@ public class CreateOrderHandler
         var validationResult = await validator.ValidateAsync(command, ct);
 
         if (!validationResult.IsValid)
+        {
+            logger.LogWarning("Validation failed for command {CreateOrderCommand}", command);
             throw new ValidationException(validationResult.Errors);
+        }
 
         var items = command.Items.Select(i =>
             OrderItem.Create(i.EventId, i.EventName, i.UnitPrice, i.Quantity)).ToList();
