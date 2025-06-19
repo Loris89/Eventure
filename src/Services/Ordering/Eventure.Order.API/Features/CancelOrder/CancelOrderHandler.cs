@@ -9,10 +9,11 @@ public class CancelOrderHandler
 {
     public static async Task<Result> Handle(
         CancelOrderCommand command, 
-        IDocumentSession session,
+        IDocumentStore store,
         ILogger<CancelOrderHandler> logger,
         CancellationToken ct)
     {
+        await using var session = store.DirtyTrackedSession();
         var order = await session.LoadAsync<OrderAggregate>(command.Id, ct);
 
         if (order is null)
@@ -22,7 +23,6 @@ public class CancelOrderHandler
         }
 
         order.Cancel();
-        session.Store(order);
         await session.SaveChangesAsync(ct);
 
         logger.LogInformation("Order with ID {OrderId} cancelled", order.Id);
