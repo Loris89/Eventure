@@ -1,6 +1,6 @@
 ﻿using Carter;
 using Eventure.Order.API.Features.CancelOrder.Models;
-using Eventure.Order.API.Features.GetOrderById.Models;
+using Eventure.Order.API.Utils;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
@@ -29,11 +29,11 @@ public class CancelOrderEndpoint : CarterModule
                 return Results.Ok();
             }
 
-            return Results.NotFound(result.Errors[0].Message);
+            return ProblemResults.ToNotFoundProblem(result.Errors[0].Message);
         })
-        .WithSummary("Cancel an existing order")
+        .WithName("Cancel an existing order")
         .WithDescription("Sets the status of an order to 'Cancelled' if allowed")
-        .Produces<GetOrderByIdResponse>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }

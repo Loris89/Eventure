@@ -22,6 +22,7 @@ public class CancelOrderHandler
         }
 
         order.Cancel();
+        session.Store(order);
         await session.SaveChangesAsync(ct);
 
         logger.LogInformation("Order with ID {OrderId} cancelled", order.Id);

@@ -1,5 +1,6 @@
 ﻿using Carter;
 using Eventure.Order.API.Features.GetOrderById.Models;
+using Eventure.Order.API.Utils;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
@@ -28,7 +29,7 @@ public class GetOrderByIdEndpoint : CarterModule
                 return Results.Ok(result.Value);
             }
 
-            return Results.NotFound(result.Errors[0].Message);
+            return ProblemResults.ToNotFoundProblem(result.Errors[0].Message);
         })
         .WithName("GetOrderById")
         .WithDescription("Returns details of a specific order by its unique identifier.")
