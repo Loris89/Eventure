@@ -18,6 +18,8 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Host.UseWolverine();
 
+// "Carter" makes the minimal endpoints registration much easier.
+// This is the only line of code we need.
 builder.Services.AddCarter();
 
 builder.Services.AddMartenConfiguration(

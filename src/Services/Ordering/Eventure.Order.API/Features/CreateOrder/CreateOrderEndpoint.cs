@@ -1,6 +1,8 @@
 ﻿using Carter;
 using Eventure.Order.API.Features.CreateOrder.Models;
+using Eventure.Order.API.Infrastructure;
 using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
@@ -17,14 +19,15 @@ public class CreateOrderEndpoint : CarterModule
 
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/orders", async (
+        app.MapPost("/orders", async Task<Created<CreateOrderResponse>> (
             CreateOrderCommand command,
             IMessageBus bus,
             CancellationToken ct) =>
         {
             var orderId = await bus.InvokeAsync<Guid>(command, ct);
-            return Results.Created($"/orders/{orderId}", new CreateOrderResponse(orderId));
+            return TypedResults.Created($"/orders/{orderId}", new CreateOrderResponse(orderId));
         })
+        .AddEndpointFilter<ValidationFilter<CreateOrderCommand>>()
         .WithName("CreateOrder")
         .WithDescription("Creates a new order with one or more event tickets.")
         .Produces<CreateOrderResponse>(StatusCodes.Status201Created)
