@@ -26,7 +26,7 @@ public class GetOrderByIdEndpoint : CarterModule
             var result = await bus.InvokeAsync<Result<GetOrderByIdResponse>>(new GetOrderByIdQuery(id), ct);
             if (result.IsSuccess)
             {
-                return Results.Ok(result.Value);
+                return TypedResults.Ok(result.Value);
             }
 
             return ProblemResults.ToNotFoundProblem(result.Errors[0].Message);

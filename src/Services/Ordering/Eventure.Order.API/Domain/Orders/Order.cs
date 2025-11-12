@@ -1,4 +1,5 @@
 ﻿using Eventure.Order.API.Domain.Common;
+using Eventure.Order.API.Exceptions;
 using Eventure.Order.API.Infrastructure;
 using System.Text.Json.Serialization;
 
@@ -25,7 +26,7 @@ public sealed class Order : Aggregate<Guid>
     private Order(Guid id, Guid userId, IEnumerable<OrderItem> items)
     {
         if (!items.Any())
-            throw new InvalidOperationException("An order must have at least one item.");
+            throw new DomainRuleViolationException("An order must have at least one item.");
 
         Id = id;
         UserId = userId;
@@ -43,7 +44,7 @@ public sealed class Order : Aggregate<Guid>
     public void MarkAsPaid()
     {
         if (Status != OrderStatus.Created)
-            throw new InvalidOperationException("Only orders in 'Created' state can be paid.");
+            throw new DomainRuleViolationException("Only orders in 'Created' state can be paid.");
 
         Status = OrderStatus.Paid;
     }
@@ -51,10 +52,10 @@ public sealed class Order : Aggregate<Guid>
     public void Cancel()
     {
         if (Status == OrderStatus.Paid)
-            throw new InvalidOperationException("Cannot cancel an order that has already been paid.");
+            throw new DomainRuleViolationException("Cannot cancel an order that has already been paid.");
 
         if (Status == OrderStatus.Cancelled)
-            throw new InvalidOperationException("The order is already cancelled.");
+            throw new DomainRuleViolationException("The order is already cancelled.");
 
         Status = OrderStatus.Cancelled;
     }

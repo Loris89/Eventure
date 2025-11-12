@@ -26,7 +26,7 @@ public class CancelOrderEndpoint : CarterModule
             var result = await bus.InvokeAsync<Result>(new CancelOrderCommand(id), ct);
             if (result.IsSuccess)
             {
-                return Results.Ok();
+                return TypedResults.Ok();
             }
 
             return ProblemResults.ToNotFoundProblem(result.Errors[0].Message);

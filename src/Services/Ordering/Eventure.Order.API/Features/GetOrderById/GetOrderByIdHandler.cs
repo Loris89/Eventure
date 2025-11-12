@@ -9,7 +9,7 @@ public class GetOrderByIdHandler
 {
     public static async Task<Result<GetOrderByIdResponse>> Handle(
         GetOrderByIdQuery query, 
-        IQuerySession session,
+        IQuerySession session, // Optimized for read-only scenarios
         ILogger<GetOrderByIdHandler> logger)
     {
         var order = await session.LoadAsync<OrderAggregate>(query.Id);
