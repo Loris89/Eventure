@@ -1,5 +1,5 @@
-﻿using Eventure.Order.API.Features.GetOrderById.Models;
-using FluentResults;
+﻿using Eventure.Order.API.Exceptions;
+using Eventure.Order.API.Features.GetOrderById.Models;
 using Marten;
 using OrderAggregate = Eventure.Order.API.Domain.Orders.Order;
 
@@ -7,18 +7,10 @@ namespace Eventure.Order.API.Features.GetOrderById;
 
 public class GetOrderByIdHandler
 {
-    public static async Task<Result<GetOrderByIdResponse>> Handle(
-        GetOrderByIdQuery query, 
-        IQuerySession session, // Optimized for read-only scenarios
-        ILogger<GetOrderByIdHandler> logger)
+    public static async Task<GetOrderByIdResponse> Handle(GetOrderByIdQuery query, IQuerySession session)
     {
-        var order = await session.LoadAsync<OrderAggregate>(query.Id);
-
-        if (order is null)
-        {
-            logger.LogWarning("Order with ID {OrderId} not found", query.Id);
-            return Result.Fail<GetOrderByIdResponse>($"Order {query.Id} not found.");
-        }
+        var order = await session.LoadAsync<OrderAggregate>(query.Id)
+            ?? throw new NotFoundException($"Order {query.Id} not found");
 
         return new GetOrderByIdResponse(
             order.Id,

@@ -9,11 +9,17 @@ public class CustomExceptionHandler(ILogger<CustomExceptionHandler> logger) : IE
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext context, Exception exception, CancellationToken cancellationToken)
     {
+        var path = context.Request.Path;
+        var method = context.Request.Method;
+
         logger.LogError(
             exception,
-            "Error Message: {exceptionMessage}, Time of occurrence {time}",
-            exception.Message, 
-            DateTime.UtcNow);
+            "{Method} {Path} failed: {ExceptionType} - {Message}",
+            method,
+            path,
+            exception.GetType().Name,
+            exception.Message
+        );
 
         (string Detail, string Title, int StatusCode) = exception switch
         {

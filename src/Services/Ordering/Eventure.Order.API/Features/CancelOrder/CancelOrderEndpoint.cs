@@ -1,7 +1,5 @@
 ﻿using Carter;
 using Eventure.Order.API.Features.CancelOrder.Models;
-using Eventure.Order.API.Utils;
-using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
@@ -23,13 +21,8 @@ public class CancelOrderEndpoint : CarterModule
             IMessageBus bus,
             CancellationToken ct) =>
         {
-            var result = await bus.InvokeAsync<Result>(new CancelOrderCommand(id), ct);
-            if (result.IsSuccess)
-            {
-                return TypedResults.Ok();
-            }
-
-            return ProblemResults.ToNotFoundProblem(result.Errors[0].Message);
+            await bus.InvokeAsync(new CancelOrderCommand(id), ct);
+            return TypedResults.Ok();
         })
         .WithName("Cancel an existing order")
         .WithDescription("Sets the status of an order to 'Cancelled' if allowed")

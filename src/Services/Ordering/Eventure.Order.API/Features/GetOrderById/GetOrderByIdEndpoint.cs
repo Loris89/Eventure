@@ -1,7 +1,5 @@
 ﻿using Carter;
 using Eventure.Order.API.Features.GetOrderById.Models;
-using Eventure.Order.API.Utils;
-using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
@@ -23,13 +21,8 @@ public class GetOrderByIdEndpoint : CarterModule
             IMessageBus bus,
             CancellationToken ct) =>
         {
-            var result = await bus.InvokeAsync<Result<GetOrderByIdResponse>>(new GetOrderByIdQuery(id), ct);
-            if (result.IsSuccess)
-            {
-                return TypedResults.Ok(result.Value);
-            }
-
-            return ProblemResults.ToNotFoundProblem(result.Errors[0].Message);
+            GetOrderByIdResponse result = await bus.InvokeAsync<GetOrderByIdResponse>(new GetOrderByIdQuery(id), ct);
+            return TypedResults.Ok(result);
         })
         .WithName("GetOrderById")
         .WithDescription("Returns details of a specific order by its unique identifier.")
