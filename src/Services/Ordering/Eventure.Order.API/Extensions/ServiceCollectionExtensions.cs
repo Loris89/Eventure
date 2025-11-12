@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
             options.DatabaseSchemaName = "ordering";
             options.Serializer(ConfigureJsonSerializer(env));
             options.Schema.For<OrderAggregate>().Identity(x => x.Id);
-        });
+        }); // Usa lightweight session di default -> mai tracking!
 
         if (env.IsDevelopment())
         {
@@ -42,8 +42,6 @@ public static class ServiceCollectionExtensions
     {
         var options = new JsonSerializerOptions
         {
-            //PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            //DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNameCaseInsensitive = true,
             WriteIndented = env.IsDevelopment()

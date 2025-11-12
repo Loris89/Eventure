@@ -13,7 +13,7 @@ public class CancelOrderHandler
         ILogger<CancelOrderHandler> logger,
         CancellationToken ct)
     {
-        await using var session = store.DirtyTrackedSession();
+        await using var session = store.DirtyTrackedSession(); // Abbiamo bisogno del tracking
         var order = await session.LoadAsync<OrderAggregate>(command.Id, ct);
 
         if (order is null)
