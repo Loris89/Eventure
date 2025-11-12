@@ -12,7 +12,18 @@ public class CustomExceptionHandler(ILogger<CustomExceptionHandler> logger) : IE
         var path = context.Request.Path;
         var method = context.Request.Method;
 
-        logger.LogError(
+        var logLevel = exception switch
+        {
+            NotFoundException => LogLevel.Warning,
+            DomainRuleViolationException => LogLevel.Warning,
+            ValidationException => LogLevel.Warning,
+            BadHttpRequestException => LogLevel.Warning,
+            BadRequestException => LogLevel.Warning,
+            _ => LogLevel.Error
+        };
+
+        logger.Log(
+            logLevel,
             exception,
             "{Method} {Path} failed: {ExceptionType} - {Message}",
             method,
