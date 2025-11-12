@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/src/Services/Catalog/Eventure.Catalog.API/bin/Debug/net8.0
+/src/Services/Catalog/Eventure.Catalog.API/obj
+/src/Services/Ordering/Eventure.Order.API/bin/Debug
+/src/Services/Ordering/Eventure.Order.API/obj
+/src/Services/Payment/Eventure.Payment.API/bin/Debug/net8.0
+/src/Services/Payment/Eventure.Payment.API/obj
