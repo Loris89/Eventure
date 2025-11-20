@@ -1,13 +1,13 @@
 ﻿using Carter;
-using Eventure.Order.API.Features.CancelOrder.Models;
+using Eventure.Order.API.Features.MarkOrderAsPaid.Models;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
-namespace Eventure.Order.API.Features.CancelOrder;
+namespace Eventure.Order.API.Features.MarkOrderAsPaid;
 
-public class CancelOrderEndpoint : CarterModule
+public class MarkOrderAsPaidEndpoint : CarterModule
 {
-    public CancelOrderEndpoint()
+    public MarkOrderAsPaidEndpoint()
         : base("/api")
     {
         WithTags("Orders");
@@ -16,16 +16,16 @@ public class CancelOrderEndpoint : CarterModule
 
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/orders/{id:guid}/cancel", async (
+        app.MapPatch("/orders/{id:guid}", async (
             Guid id,
             IMessageBus bus,
             CancellationToken ct) =>
         {
-            await bus.InvokeAsync(new CancelOrderCommand(id), ct);
+            await bus.InvokeAsync(new MarkOrderAsPaidCommand(id), ct);
             return TypedResults.Ok();
         })
-        .WithName("CancelOrder")
-        .WithDescription("Sets the status of an order to 'Cancelled' if allowed")
+        .WithName("MarkOrderAsPaid")
+        .WithDescription("Marks an order as paid by updating its status.")
         .Produces(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);

@@ -46,6 +46,9 @@ public sealed class Order : Aggregate<Guid>
         if (Status != OrderStatus.Created)
             throw new DomainRuleViolationException("Only orders in 'Created' state can be paid.");
 
+        if (Status == OrderStatus.Paid)
+            throw new DomainRuleViolationException("The order is already paid.");
+
         Status = OrderStatus.Paid;
     }
 
