@@ -15,7 +15,7 @@ public sealed class LivenessTests
     }
 
     [Fact]
-    public async Task Should_Bootstrap_Api()
+    public async Task Live_Should_Return_200()
     {
         await using var factory = new OrderingApiFactory(_db.ConnectionString);
         using var client = factory.CreateClient();

@@ -1,5 +1,6 @@
 ﻿using Carter;
 using Eventure.Order.API.Features.GetAllOrdersForUser.Models;
+using Eventure.Order.API.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
@@ -18,17 +19,18 @@ public class GetAllOrdersForUserEndpoint : CarterModule
     {
         app.MapGet("/orders/user/{userId:guid}", async (
             Guid userId,
-            int page,
-            int pageSize,
+            [AsParameters] GetAllOrdersForUserRequest request,
             IMessageBus bus,
             CancellationToken ct) =>
         {
-            GetAllOrdersForUserResponse result = await bus.InvokeAsync<GetAllOrdersForUserResponse>(
-                new GetAllOrdersForUserQuery(userId, page, pageSize), ct);
+            var result = await bus.InvokeAsync<GetAllOrdersForUserResponse>(
+                new GetAllOrdersForUserQuery(userId, request.Page, request.PageSize), ct);
+
             return TypedResults.Ok(result);
         })
         .WithName("GetAllOrdersForUser")
         .WithDescription("Returns the list of orders for a given user.")
+        .AddEndpointFilter<ValidationFilter<GetAllOrdersForUserRequest>>()
         .Produces<GetAllOrdersForUserResponse>(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
