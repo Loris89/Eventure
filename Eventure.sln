@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventure.Order.API", "src\Services\Ordering\Eventure.Order.API\Eventure.Order.API.csproj", "{173ADF7B-BBAE-4623-8CC8-50D6E5B126FF}"
 EndProject
@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{02EA68
 		src\docker\docker-compose.yml = src\docker\docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventure.Order.API.IntegrationTests", "src\Tests\Eventure.Order.API.IntegrationTests\Eventure.Order.API.IntegrationTests.csproj", "{3AA29614-2DE1-4B65-811D-5BB596169ED1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{5D6E9CE4-B2D9-45D7-9F33-BEEDC554E888}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D6E9CE4-B2D9-45D7-9F33-BEEDC554E888}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D6E9CE4-B2D9-45D7-9F33-BEEDC554E888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AA29614-2DE1-4B65-811D-5BB596169ED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AA29614-2DE1-4B65-811D-5BB596169ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AA29614-2DE1-4B65-811D-5BB596169ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AA29614-2DE1-4B65-811D-5BB596169ED1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 		{13A8565B-7FEA-447F-984E-064C7A418ED5} = {B029C5BC-A057-43F4-A450-921E72FBAF14}
 		{CB971FD3-2BC2-4A93-8856-83DEB95134D4} = {B029C5BC-A057-43F4-A450-921E72FBAF14}
 		{C4EE7C6E-544D-4C20-B422-15B58E78810D} = {B029C5BC-A057-43F4-A450-921E72FBAF14}
+		{3AA29614-2DE1-4B65-811D-5BB596169ED1} = {EA6AC558-8F4D-4A9C-A259-0B4C8E96AF92}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E7DB98D9-E186-4E9F-AD59-B1F01D52529F}

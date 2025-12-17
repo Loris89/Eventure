@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
             options.Schema.For<OrderAggregate>().Identity(x => x.Id);
         }); // Usa lightweight session di default -> mai tracking!
 
-        if (env.IsDevelopment())
+        if (env.IsDevelopment() || env.IsEnvironment("Testing"))
         {
             services.ConfigureMarten(opts =>
             {
