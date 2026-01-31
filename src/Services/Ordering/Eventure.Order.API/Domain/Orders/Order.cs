@@ -43,24 +43,42 @@ public sealed class Order : Aggregate<Guid>
 
     public void MarkAsPaid()
     {
-        if (Status != OrderStatus.Created)
-            throw new DomainRuleViolationException("Only orders in 'Created' state can be paid.");
-
-        if (Status == OrderStatus.Paid)
-            throw new DomainRuleViolationException("The order is already paid.");
+        EnsureCanTransitionFrom(OrderStatus.Created);
 
         Status = OrderStatus.Paid;
+        LastModified = DateTime.UtcNow;
     }
 
     public void Cancel()
     {
-        if (Status == OrderStatus.Paid)
-            throw new DomainRuleViolationException("Cannot cancel an order that has already been paid.");
-
-        if (Status == OrderStatus.Cancelled)
-            throw new DomainRuleViolationException("The order is already cancelled.");
+        EnsureCanTransitionFrom(OrderStatus.Created);
 
         Status = OrderStatus.Cancelled;
+        LastModified = DateTime.UtcNow;
+    }
+
+    public void MarkAsFailed()
+    {
+        EnsureCanTransitionFrom(OrderStatus.Created);
+
+        Status = OrderStatus.Failed;
+        LastModified = DateTime.UtcNow;
+    }
+
+    private void EnsureCanTransitionFrom(OrderStatus expectedCurrentStatus)
+    {
+        if (Status == expectedCurrentStatus)
+            return;
+
+        var reason = Status switch
+        {
+            _ when Status == OrderStatus.Paid => "order has already been paid",
+            _ when Status == OrderStatus.Cancelled => "order has already been cancelled",
+            _ when Status == OrderStatus.Failed => "order has already failed",
+            _ => $"current state is '{Status.Name}'"
+        };
+
+        throw new DomainRuleViolationException(
+            $"Invalid state transition. Cannot change order from '{Status.Name}' to '{expectedCurrentStatus.Name}': {reason}.");
     }
 }
-
