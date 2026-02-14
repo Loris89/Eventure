@@ -23,10 +23,7 @@ public static class ServiceCollectionExtensions
 
         if (env.IsDevelopment() || env.IsEnvironment("Testing"))
         {
-            services.ConfigureMarten(opts =>
-            {
-                opts.AutoCreateSchemaObjects = AutoCreate.All;
-            });
+            services.ConfigureMarten(opts => opts.AutoCreateSchemaObjects = AutoCreate.All);
         }
 
         return services;

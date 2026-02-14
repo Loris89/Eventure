@@ -8,16 +8,16 @@ namespace Eventure.Order.API.Features.CancelOrder;
 public class CancelOrderHandler
 {
     public static async Task Handle(
-        CancelOrderCommand command, 
+        CancelOrderCommand command,
         IDocumentStore store,
         ILogger<CancelOrderHandler> logger,
         CancellationToken ct)
     {
         await using var session = store.DirtyTrackedSession(); // We need tracking (like EF...)
 
-        var order = await session.LoadAsync<OrderAggregate>(command.Id, ct) 
+        var order = await session.LoadAsync<OrderAggregate>(command.Id, ct)
             ?? throw new NotFoundException($"Order {command.Id} not found");
-        
+
         order.Cancel();
         await session.SaveChangesAsync(ct);
 
