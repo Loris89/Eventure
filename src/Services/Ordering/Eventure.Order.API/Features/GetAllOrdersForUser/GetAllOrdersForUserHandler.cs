@@ -1,4 +1,5 @@
 ﻿using Eventure.Order.API.Features.GetAllOrdersForUser.Models;
+using Eventure.Order.API.Utils.Pagination;
 using Marten;
 using OrderAggregate = Eventure.Order.API.Domain.Orders.Order;
 
@@ -7,8 +8,8 @@ namespace Eventure.Order.API.Features.GetAllOrdersForUser;
 public class GetAllOrdersForUserHandler
 {
     public static async Task<GetAllOrdersForUserResponse> Handle(
-        GetAllOrdersForUserQuery query, 
-        IQuerySession session, 
+        GetAllOrdersForUserQuery query,
+        IQuerySession session,
         ILogger<GetAllOrdersForUserHandler> logger,
         CancellationToken ct)
     {
@@ -32,22 +33,20 @@ public class GetAllOrdersForUserHandler
                 oi.Id, oi.EventId, oi.EventName, oi.UnitPrice, oi.Quantity, oi.TotalPrice))
         )).ToList();
 
-        int totalPages = (int)Math.Ceiling((double)totalCount / query.PageSize);
-        bool hasNextPage = query.Page < totalPages;
-        bool hasPreviousPage = query.Page > 1;
+        PaginationMetadata paginationMetadata = PaginationHelper.Calculate(totalCount, query.Page, query.PageSize);
 
         logger.LogInformation(
             "Retrieved page {Page}/{TotalPages} with {Count} orders for user {UserId}",
-            query.Page, totalPages, orders.Count, query.UserId);
+            query.Page, paginationMetadata.TotalPages, orders.Count, query.UserId);
 
         return new GetAllOrdersForUserResponse(
             orderDtos,
             totalCount,
             query.Page,
             query.PageSize,
-            totalPages,
-            hasNextPage,
-            hasPreviousPage
+            paginationMetadata.TotalPages,
+            paginationMetadata.HasNextPage,
+            paginationMetadata.HasPreviousPage
         );
     }
 }
