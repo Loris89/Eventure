@@ -8,10 +8,10 @@ namespace Eventure.Order.API.Domain.Orders;
 public sealed class Order : Aggregate<Guid>
 {
     [JsonInclude]
-    public Guid UserId { get; private set; }
+    public Guid UserId { get; }
 
     [JsonInclude]
-    public List<OrderItem> Items { get; private set; } = [];
+    public List<OrderItem> Items { get; } = [];
 
     [JsonInclude]
     [JsonConverter(typeof(SmartEnumJsonConverter<OrderStatus>))]
